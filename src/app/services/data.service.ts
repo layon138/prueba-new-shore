@@ -9,46 +9,47 @@ import { FlightResponse, Journey } from '../interfaces/jorney.interface';
   providedIn: 'root'
 })
 export class DataService {
-  private  numberScales=0
+  private numberScales = 0
+  public maxScales =  4
   constructor(private http: HttpClient) {
 
   }
 
-  travelRecurrency(whereIwas:string,where: string,allFlights: FlightResponse[], arrival: string){
-    const flightsToScales = allFlights?.filter(state => state.departureStation == where && state.arrivalStation!=whereIwas)
+  travelRecurrency(whereIwas: string, where: string, allFlights: FlightResponse[], arrival: string) {
+    let flightsToScales = allFlights?.filter(state => state.departureStation == where && state.arrivalStation != whereIwas)
     let listOfScales: FlightResponse[] = []
-    let scaleBet: FlightResponse[] = []
-    for (const possibleScale of flightsToScales) {
-      const flightToDestination = allFlights?.filter(state => state.departureStation == possibleScale.arrivalStation && state.arrivalStation == arrival)
-      if (flightToDestination.length > 0) {
-        listOfScales.push(possibleScale)
-        listOfScales.push(flightToDestination[0])
-        break
+    let scaleBetter: FlightResponse[] = []
+    this.numberScales++
+    if (this.numberScales < this.maxScales) {
+      for (const possibleScale of flightsToScales) {
+        console.log(possibleScale)
+        const flightToDestination = allFlights?.filter(state => state.departureStation == possibleScale.arrivalStation && state.arrivalStation == arrival)
+        if (flightToDestination.length > 0) {
+          scaleBetter.push(possibleScale)
+          scaleBetter.push(flightToDestination[0])
+          break
+        }
+        const newList = this.travelRecurrency(possibleScale.departureStation, possibleScale.arrivalStation, allFlights, arrival)
+        this.numberScales--
+          if (newList.length > 0  &&  (newList.length < scaleBetter.length ||  scaleBetter.length==0)){
+            scaleBetter=[]
+            scaleBetter.push(possibleScale)
+            newList.forEach(scale => {
+              scaleBetter.push(scale)
+          });
+        }
       }
-      this.numberScales++
-      if( this.numberScales==4){
-        break
-      }
-      const newList=this.travelRecurrency(possibleScale.departureStation,possibleScale.arrivalStation,allFlights,arrival)
-     if(newList.length>0){
-      listOfScales.push(possibleScale)
-      newList.forEach(scale => {
-        listOfScales.push(scale)
-      });
-      break
-     }
+
     }
+    listOfScales = scaleBetter
     return listOfScales
   }
 
   findTravel(where: string, allFlights: FlightResponse[], arrival: string) {
     const flightToDestination = allFlights?.filter(state => state.departureStation == where && state.arrivalStation == arrival)
-    console.log(flightToDestination)
     if (flightToDestination.length == 0) {
-      let list: any[] = []
-      this.numberScales=0
-      list =this.travelRecurrency("",where, allFlights,arrival)
-      return list
+      this.numberScales = 0
+      return  this.travelRecurrency("", where, allFlights, arrival)
     } else {
       return flightToDestination
     }
@@ -59,7 +60,6 @@ export class DataService {
     return this.http.get<any>(`${environment.APIDomain}api/flights/2`, {}).pipe(
       map((flights: FlightResponse[]) => {
         const list: FlightResponse[] = this.findTravel(jorney.origin, flights, jorney.destination)
-        console.log(list)
         list.forEach(element => {
           jorney.price = jorney.price + element.price
           jorney.flights.push(

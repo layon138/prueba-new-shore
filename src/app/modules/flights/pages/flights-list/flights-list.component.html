@@ -26,6 +26,12 @@
                     </ng-container>
                   </div>
             </div>
+          
+            <div class="text-form">
+              <label>Numero maximo de escalas</label>
+              <p-dropdown [options]="listsScales"  formControlName="maxScales" optionLabel="name"></p-dropdown>
+            </div>
+
             <div class="text-form">
               <label>Tipo de moneda</label>
               <p-dropdown [options]="moneys" (onChange)="changeTypeMoney()" formControlName="money" optionLabel="name"></p-dropdown>

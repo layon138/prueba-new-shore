@@ -32,6 +32,24 @@ export class FlightsListComponent implements OnInit {
     flights:[],
     price:0
   }
+  public listsScales=[
+    {
+      name:"1",
+      value:1,
+    },
+    {
+      name:"2",
+      value:2,
+    },
+    {
+      name:"3",
+      value:3,
+    },
+    {
+      name:"4",
+      value:4,
+    }
+  ]
   public moneys=[
     {
       name:"COP",
@@ -53,12 +71,16 @@ export class FlightsListComponent implements OnInit {
         Validators.maxLength(3),
         Validators.minLength(3)
       ])),
-      destino: new FormControl('', Validators.compose([
+      maxScales: new FormControl( {
+        name:"1",
+        value:1,
+      }, Validators.compose([
         Validators.required,
+      ])),
+      destino: new FormControl('',  [   Validators.required,
         Validators.maxLength(3),
         Validators.minLength(3),
-        matchOtherValidator('origen')
-      ])),
+        matchOtherValidator('origen')]),
       money: new FormControl(  {
         name:"USD",
         value:1,
@@ -84,6 +106,7 @@ export class FlightsListComponent implements OnInit {
         price:0,
         flights:[]
       }
+      this.service.maxScales=this.myForm.get('maxScales')?.value.value
       this.service.getJorney(jorneyToFindTemporal).subscribe((data:Journey)=>{
           this.jorneyToFind=data
       })

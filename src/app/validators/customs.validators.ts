@@ -28,7 +28,7 @@ export function matchOtherValidator(otherControlName: string) {
         return null;
       }
   
-      if (otherControl.value == thisControl.value) {
+      if (otherControl?.value == thisControl?.value) {
         return {
           matchOther: true
         };
