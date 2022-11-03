@@ -40,7 +40,7 @@
     </div>
     <h3 *ngIf="this.jorneyToFind.flights.length==0 && this.jorneyToFind.origin!=''">No se encontro ruta para este trayecto</h3>
     <div *ngIf="this.jorneyToFind.flights.length>0" responsiveLayout="scroll">
-      <h3>La ruta es la siguiente con un valor de {{this.jorneyToFind.price}} {{this.myForm.get('money')?.value.name}}</h3>
+      <h3>La ruta es la siguiente con un valor de {{this.jorneyToFind.price | currency:this.myForm.get('money')?.value.name}}</h3>
 
       <p-table 
       [value]="this.jorneyToFind.flights" >
@@ -55,7 +55,7 @@
             <tr>
                 <td>{{product.origin}}</td>
                 <td>{{product.destination}}</td>
-                <td>{{product.price*this.myForm.get('money')?.value.value}} {{this.myForm.get('money')?.value.name}}</td>
+                <td>{{product.price*this.myForm.get('money')?.value.value  | currency:this.myForm.get('money')?.value.name}}</td>
             </tr>
         </ng-template>
     </p-table>
