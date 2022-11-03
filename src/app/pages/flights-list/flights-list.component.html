@@ -1,0 +1,63 @@
+<div class="flex-main">
+  <h3>Buscador de Rutas</h3>
+    <div class="card-flight-form">
+        <form [formGroup]="myForm" >
+            <div class="text-form">
+                <label>Origen</label>
+                <input type="text" name="origen" class="form-control" pInputText uppercase formControlName="origen" required>
+                <div class="validation-errors">
+                    <ng-container *ngFor="let validation of validation_messages.origen">
+                      <div class="error-message"
+                        *ngIf="myForm.get('origen')?.hasError(validation.type) && (myForm.get('origen')?.dirty || myForm.get('origen')?.touched )">
+                        {{ validation.message }}
+                      </div>
+                    </ng-container>
+                  </div>
+            </div>
+            <div class="text-form">
+                <label>Destino</label>
+                <input type="text" name="destino" class="form-control" pInputText uppercase formControlName="destino"  required>
+                <div class="validation-errors">
+                    <ng-container *ngFor="let validation of validation_messages.destino">
+                      <div class="error-message"
+                        *ngIf="myForm.get('destino')?.hasError(validation.type) && (myForm.get('destino')?.dirty || myForm.get('destino')?.touched )">
+                        {{ validation.message }}
+                      </div>
+                    </ng-container>
+                  </div>
+            </div>
+            <div class="text-form">
+              <label>Tipo de moneda</label>
+              <p-dropdown [options]="moneys" (onChange)="changeTypeMoney()" formControlName="money" optionLabel="name"></p-dropdown>
+            </div>
+          
+            <div class="text-form">
+                <button pButton type="button" (click)="findJorney()" class="btn btn-primary btn-block" >Consultar Ruta</button>
+
+              </div>
+        </form>
+        
+    </div>
+    <h3 *ngIf="this.jorneyToFind.flights.length==0 && this.jorneyToFind.origin!=''">No se encontro ruta para este trayecto</h3>
+    <div *ngIf="this.jorneyToFind.flights.length>0" responsiveLayout="scroll">
+      <h3>La ruta es la siguiente con un valor de {{this.jorneyToFind.price}} {{this.myForm.get('money')?.value.name}}</h3>
+
+      <p-table 
+      [value]="this.jorneyToFind.flights" >
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Origen</th>
+                <th>Destino</th>
+                <th>Valor</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+            <tr>
+                <td>{{product.origin}}</td>
+                <td>{{product.destination}}</td>
+                <td>{{product.price*this.myForm.get('money')?.value.value}} {{this.myForm.get('money')?.value.name}}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+    </div>
+</div>
