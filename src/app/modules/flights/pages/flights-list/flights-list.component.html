@@ -34,7 +34,7 @@
 
             <div class="text-form">
               <label>Tipo de moneda</label>
-              <p-dropdown [options]="moneys" (onChange)="changeTypeMoney()" formControlName="money" optionLabel="name"></p-dropdown>
+              <p-dropdown [options]="moneys" formControlName="money" optionLabel="name"></p-dropdown>
             </div>
           
             <div class="text-form">
@@ -46,7 +46,7 @@
     </div>
     <h3 *ngIf="this.jorneyToFind.flights.length==0 && this.jorneyToFind.origin!=''">No se encontro ruta para este trayecto</h3>
     <div *ngIf="this.jorneyToFind.flights.length>0" responsiveLayout="scroll">
-      <h3>La ruta es la siguiente con un valor de {{this.jorneyToFind.price | currency:this.myForm.get('money')?.value.name}}</h3>
+      <h3>La ruta es la siguiente con un valor de {{this.jorneyToFind.price*this.myForm.get('money')?.value.value  | currency:this.myForm.get('money')?.value.name}}</h3>
 
       <p-table 
       [value]="this.jorneyToFind.flights" >

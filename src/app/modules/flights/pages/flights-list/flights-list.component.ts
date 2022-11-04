@@ -94,9 +94,7 @@ export class FlightsListComponent implements OnInit {
    
   }
 
-  changeTypeMoney(){
-    
-  }
+
 
   findJorney(){
     if(this.myForm.valid){
